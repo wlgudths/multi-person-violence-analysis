@@ -1,0 +1,59 @@
+runtime:
+  device: cuda:0
+
+data:
+  detect_test: /path/to/src/data/test.png
+  test_dataset: /path/to/dataset/samples
+  exp_dataset: /path/to/dataset/violence
+  target_fps: 20
+  target_long: 1280
+
+detection:
+  model: rtmdet_m
+  config_path: /rtmdet/rtmdet_m_8xb32-300e_coco.py
+  checkpoint_path: /checkpoints/rtmdet_m_8xb32-300e_coco_20220719_112220-229f527c.pth
+  score_thr: 0.7
+  class_id: 0
+
+tracker:
+  type: botsort
+
+  reid_weights: /checkpoints/osnet_x0_25_msmt17.pt
+  half: false
+  track_high_thresh: 0.5
+  track_low_thresh: 0.1
+  new_track_thresh: 0.6
+  track_buffer: 30
+  match_thresh: 0.8
+  proximity_thresh: 0.5
+  appearance_thresh: 0.25
+  cmc_method: ecc
+  
+pose:
+  model: rtmpose_m
+  config_path: /checkpoints/rtmpose/rtmpose-m_8xb256-420e_coco-256x192.py
+  checkpoint_path: /checkpoints/rtmpose/rtmpose-m_simcc-coco_pt-aic-coco_420e-256x192-d8dd5ca4_20230127.pth
+
+gcn:
+  model: stgcnpp
+  config_path: path/to/checkpoints/stgcnpp/stgcnpp_8xb16-joint-u100-80e_ntu60-xsub-keypoint-2d.py
+  checkpoint_path: path/to/checkpoints/stgcnpp_finetuned.pt
+  window_size: 40
+  stride: 10
+  min_track_ratio: 0.8
+  max_missing_gap: 3
+  fight_class: 1
+
+analysis:
+  auto_select: true
+  target_M: [3, 4]
+  top_k: 3
+  num_vis_frames: 0
+  source_root: /path/to/dataset/violence
+
+output:
+  root_dir: /path/to/outputs
+  test: /path/to/test
+
+log:
+  root: logs
